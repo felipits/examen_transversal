@@ -1,0 +1,119 @@
+import random
+import math
+import csv
+
+trabajadores = [
+    {"nombre": "Juan Pérez      "},
+    {"nombre": "María García    "},
+    {"nombre": "Carlos López    "},
+    {"nombre": "Ana Martínez    "},
+    {"nombre": "Pedro Rodríguez "},
+    {"nombre": "Laura Hernández "},
+    {"nombre": "Miguel Sánchez  "},
+    {"nombre": "Isabel Gómez    "},
+    {"nombre": "Francisco Díaz  "},
+    {"nombre": "Elena Fernández "}
+]
+
+def menu():
+    print("\nMENÚ:")
+    print("1. Asignar sueldos aleatorios")
+    print("2. Clasificar sueldos")
+    print("3. Ver estadísticas")
+    print("4. Generar reporte de sueldos")
+    print("5. Salir del programa")
+    opcion = input("\nSeleccione una opcion: ")
+
+    if opcion == "1":
+        asignar_sueldos()
+        return menu()
+    elif opcion == "2":
+        clasificar_sueldos()
+        return menu()
+    elif opcion == "3":
+        ver_estadisticas()
+        return menu()
+    elif opcion == "4":
+        reporte_sueldos()
+        return menu()
+    elif opcion == "5":
+        salir_programa()
+    else:
+        print("Seleccione una opcion valida.")
+        return menu()
+  
+def asignar_sueldos():
+    for trabajador in trabajadores:
+        trabajador["sueldo"] = random.randint(300000, 2500000)
+    print("\nSueldos asignados aleatoriamente.")
+    print("\nLista de empleados con sus sueldos:")
+    for trabajador in trabajadores:
+        print(trabajador)
+
+def clasificar_sueldos():
+    menores = []
+    entre = []
+    superiores = []
+
+    for trabajador in trabajadores:
+        sueldo = trabajador["sueldo"]
+        if sueldo < 800000:
+            menores.append(trabajador)
+        elif 800000 <= sueldo <= 2000000:
+            entre.append(trabajador)
+        else:
+            superiores.append(trabajador)
+    
+    print("\nSueldos menores a $800.000: ")
+    for trabajador in menores: 
+        print(f'{trabajador["nombre"]} - ${trabajador["sueldo"]}')
+
+    print("\nSueldos entre $800.000 y $2.000.000: ")
+    for trabajador in entre:
+        print(f'{trabajador["nombre"]} - ${trabajador["sueldo"]}')
+    
+    print("\nSueldos superiores a $2.000.000: ")
+    for trabajador in superiores:
+        print(f'{trabajador["nombre"]} - ${trabajador["sueldo"]}')
+
+    total_sueldos = sum(trabajador["sueldo"] for trabajador in trabajadores)
+
+    print(f'\nTotal Sueldos: ${total_sueldos}')
+
+def media_geometrica():
+    producto = math.prod(trabajador["sueldo"] for trabajador in trabajadores)
+    return producto ** (1 / len(trabajadores))
+
+def ver_estadisticas():
+    sueldos = [trabajador["sueldo"] for trabajador in trabajadores]
+    mas_alto = max(sueldos)
+    mas_bajo = min(sueldos)
+    media_arit = sum(sueldos) / len(sueldos)
+    media_geo = media_geometrica()
+
+    print(f'\nSueldo mas alto: ${mas_alto}')
+    print(f'Sueldo mas bajo: ${mas_bajo}')
+    print(f'Promedio de sueldos: ${media_arit:.2f}')
+    print(f'Media geométrica de sueldos: ${media_geo:.2f}')
+
+def reporte_sueldos():
+    with open('reporte_sueldos.csv', 'w', newline='') as file:
+        writer = csv.writer(file, delimiter=',')
+        writer.writerow(["Nombre empleado","Sueldo Base", "Descuento Salud", "Descuento AFP", "Sueldo Líquido"])
+        
+        print("\nNombre empleado\t Sueldo Base\tDescuento Salud\t\tDescuento AFP\t\tSueldo Líquido")
+        for trabajador in trabajadores:
+            descuento_salud = round(trabajador["sueldo"] * 0.07)
+            descuento_afp = round(trabajador["sueldo"] * 0.12)
+            sueldo_liquido = round(trabajador["sueldo"] - descuento_salud - descuento_afp)
+            writer.writerow([trabajador["nombre"], trabajador["sueldo"], descuento_salud, descuento_afp, sueldo_liquido])
+            print(f"{trabajador['nombre']} ${trabajador['sueldo']}\t${descuento_salud}\t\t\t${descuento_afp}\t\t\t${sueldo_liquido}")
+
+    print("\nSe ha generado el reporte en 'reporte_sueldos.csv'.")
+
+def salir_programa():
+    print("Finalizando programa…")
+    print("Desarrollado por Felipe Villalobos")
+    print("RUT 19283062-1")
+
+menu()
